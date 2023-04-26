@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: P_03_BackRightElevonMask
+  m_Mask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: P_03_Armature
+    m_Weight: 0
+  - m_Path: P_03_Armature/Root
+    m_Weight: 0
+  - m_Path: P_03_Armature/Root/BackElevon_L
+    m_Weight: 0
+  - m_Path: P_03_Armature/Root/BackElevon_L/BackElevon_L_end
+    m_Weight: 0
+  - m_Path: P_03_Armature/Root/BackElevon_R
+    m_Weight: 1
+  - m_Path: P_03_Armature/Root/BackElevon_R/BackElevon_R_end
+    m_Weight: 1
+  - m_Path: P_03_Armature/Root/BackMiddleElevon
+    m_Weight: 0
+  - m_Path: P_03_Armature/Root/BackMiddleElevon/BackMiddleElevon_end
+    m_Weight: 0
+  - m_Path: P_03_Armature/Root/FrontElevon_L
+    m_Weight: 0
+  - m_Path: P_03_Armature/Root/FrontElevon_L/FrontElevon_L_end
+    m_Weight: 0
+  - m_Path: P_03_Armature/Root/FrontElevon_R
+    m_Weight: 0
+  - m_Path: P_03_Armature/Root/FrontElevon_R/FrontElevon_R_end
+    m_Weight: 0
+  - m_Path: P_03_HoodFront
+    m_Weight: 0
