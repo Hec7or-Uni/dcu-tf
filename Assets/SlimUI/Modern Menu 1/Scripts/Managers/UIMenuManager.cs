@@ -92,6 +92,17 @@ namespace SlimUI.ModernMenu{
 			SetThemeColors();
 		}
 
+		[SerializeField]
+		Mirror.NetworkManager manager;
+		public void startCoop() {
+			manager.StartHost();
+			Mirror.NetworkClient.Ready();
+			if (Mirror.NetworkClient.localPlayer == null)
+			{
+				Mirror.NetworkClient.AddPlayer();
+			}
+		}
+
 		void SetThemeColors()
 		{
 			switch (theme)
