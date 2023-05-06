@@ -81,6 +81,7 @@ namespace SlimUI.ModernMenu{
         public AudioSource swooshSound;
 
 		void Start(){
+			PlayerPrefs.SetInt("Coop", 0);
 			CameraObject = transform.GetComponent<Animator>();
 
 			playMenu.SetActive(false);
@@ -95,12 +96,14 @@ namespace SlimUI.ModernMenu{
 		[SerializeField]
 		Mirror.NetworkManager manager;
 		public void startCoop() {
+			PlayerPrefs.SetInt("Coop", 1);
+
 			manager.StartHost();
-			Mirror.NetworkClient.Ready();
+			/*Mirror.NetworkClient.Ready();
 			if (Mirror.NetworkClient.localPlayer == null)
 			{
 				Mirror.NetworkClient.AddPlayer();
-			}
+			}*/
 		}
 
 		void SetThemeColors()
@@ -278,6 +281,7 @@ namespace SlimUI.ModernMenu{
 			operation.allowSceneActivation = false;
 			mainCanvas.SetActive(false);
 			loadingMenu.SetActive(true);
+			PlayerPrefs.SetInt("Coop", 0);
 
 			while (!operation.isDone){
 				float progress = Mathf.Clamp01(operation.progress / .95f);

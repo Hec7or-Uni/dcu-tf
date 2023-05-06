@@ -338,7 +338,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &817167258
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,10 +354,10 @@ MonoBehaviour:
   dontDestroyOnLoad: 1
   runInBackground: 1
   autoStartServerBuild: 1
-  autoConnectClientBuild: 1
+  autoConnectClientBuild: 0
   sendRate: 30
   offlineScene: Assets/Scenes/Main menu.unity
-  onlineScene: Assets/Scenes/gameScene.unity
+  onlineScene: Assets/Scenes/gameScene - Multi.unity
   transport: {fileID: 817167261}
   networkAddress: localhost
   maxConnections: 100
@@ -1365,7 +1365,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2976939153705505003, guid: 0a68be1bd13d8694e8d8fe85574ac075, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: gameScene
+      value: gameScene - Solo
       objectReference: {fileID: 0}
     - target: {fileID: 2976939153705505003, guid: 0a68be1bd13d8694e8d8fe85574ac075, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName

@@ -13,84 +13,60 @@ public class MovementInput : MonoBehaviour {
 	//private Animator anim;
 	private Camera cam;
 	private CharacterController controller;
-	private bool isGrounded;
 	private Vector3 desiredMoveDirection;
-	private float InputX;
-	private float InputZ;
 
 	public bool blockRotationPlayer;
 	public float desiredRotationSpeed = 0.1f;
 
-	public float Speed;
-	public float allowPlayerRotation = 0.1f;
 
+	public float forwardSpeed = 25f, strafeSpeed = 7.5f, hoverSpeed = 5f;
+    private float activeHoverSpeed;
+    public float lookRateSpeed = 90f;
+    private Vector2 lookInput, screenCenter, mouseDistance;
 
-    [Header("Animation Smoothing")]
-    [Range(0, 1f)]
-    public float HorizontalAnimSmoothTime = 0.2f;
-    [Range(0, 1f)]
-    public float VerticalAnimTime = 0.2f;
-    [Range(0,1f)]
-    public float StartAnimTime = 0.3f;
-    [Range(0, 1f)]
-    public float StopAnimTime = 0.15f;
+    private float rollInput;
+    public float rollSpeed = 90f, rollAcceleration = 3.5f;
 
-    public float verticalVel;
-    private Vector3 moveVector;
 
 	void Start () {
 		//anim = this.GetComponent<Animator> ();
 		cam = Camera.main;
 		controller = this.GetComponent<CharacterController> ();
+
+		screenCenter.x = Screen.width * .5f;
+        screenCenter.y = Screen.height * .5f;
 	}
 	
 	void Update () {
-
-		// InputMagnitude ();
-
-        // isGrounded = controller.isGrounded;
-        // if (isGrounded)
-        //     verticalVel -= 0;
-        // else
-        //     verticalVel -= 1;
-
 		PlayerMoveAndRotation();
-        moveVector = new Vector3(0, verticalVel * .2f * Time.deltaTime, 0);
-        controller.Move(moveVector);
     }
 
 	void PlayerMoveAndRotation() {
-		InputX = Input.GetAxis("Horizontal");
+		// Giros de camara
+        lookInput.x = Input.mousePosition.x;
+        lookInput.y = Input.mousePosition.y;
 
-		var camera = Camera.main;
-		var forward = cam.transform.forward;
-		var right = cam.transform.right;
-		var up = cam.transform.up;
+        // Consistencia en el movimiento
+        mouseDistance.x = (lookInput.x - screenCenter.x) / screenCenter.y;
+        mouseDistance.y = (lookInput.y - screenCenter.y) / screenCenter.y;
 
-		//forward.y = 0f;
-		//right.y = 0f;
+        mouseDistance = Vector2.ClampMagnitude(mouseDistance, 1f);
 
-		forward.Normalize();
-		right.Normalize();
-		up.Normalize();
+        // Rotacion
+        rollInput = Mathf.Lerp(rollInput, Input.GetAxisRaw("Roll"), rollAcceleration * Time.deltaTime);
 
-		desiredMoveDirection =  forward + 
-								up * Input.GetAxis("Vertical") * PlayerPrefs.GetFloat("YSensitivity") * (PlayerPrefs.GetInt("InvertedY") == 1 ? -1 : 1) + 
-								right * InputX * PlayerPrefs.GetFloat("XSensitivity") * (PlayerPrefs.GetInt("InvertedX") == 1 ? -1 : 1);
+        transform.Rotate(-mouseDistance.y * lookRateSpeed * Time.deltaTime, 0f/*mouseDistance.x * lookRateSpeed * Time.deltaTime*/, rollInput * rollSpeed * Time.deltaTime, Space.Self);
 
-		transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(desiredMoveDirection), desiredRotationSpeed);
-		controller.Move(desiredMoveDirection * Time.deltaTime * Velocity);
+		var acceleration = (Input.GetAxisRaw("Vertical") != 1) ? 0 : 1;
 
-		/*if (blockRotationPlayer == false) {
-			//Camera
-			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(desiredMoveDirection), desiredRotationSpeed);
-			controller.Move(desiredMoveDirection * Time.deltaTime * Velocity);
-		}
-		else
-		{
-			//Strafe
-			controller.Move((transform.forward * InputZ + transform.right  * InputX) * Time.deltaTime * Velocity);
-		}*/
+        // Movimientos (arriba/abajo, delante/detras, derecha/izquierda)
+        //activeStrafeSpeed = Input.GetAxisRaw("Horizontal") * strafeSpeed;
+        activeHoverSpeed = hoverSpeed * Input.GetAxis("Mouse Y");
+
+		var movement = transform.forward * (forwardSpeed + acceleration * forwardSpeed) * Time.deltaTime + 
+					//transform.right * activeStrafeSpeed * Time.deltaTime + 
+					transform.up * activeHoverSpeed * Time.deltaTime;
+		controller.Move(movement);
 	}
 
     public void LookAt(Vector3 pos)
@@ -104,32 +80,8 @@ public class MovementInput : MonoBehaviour {
 
         desiredMoveDirection = forward;
 		Quaternion lookAtRotation = Quaternion.LookRotation(desiredMoveDirection);
-		Quaternion lookAtRotationOnly_Y = Quaternion.Euler(transform.rotation.eulerAngles.x, lookAtRotation.eulerAngles.y, transform.rotation.eulerAngles.z);
+		Quaternion lookAtRotationOnly_Y = Quaternion.Euler(transform.rotation.eulerAngles.x, lookAtRotation.eulerAngles.y, -transform.rotation.eulerAngles.z);
 
 		t.rotation = Quaternion.Slerp(transform.rotation, lookAtRotationOnly_Y, desiredRotationSpeed);
-	}
-
-	void InputMagnitude() {
-		//Calculate Input Vectors
-		InputX = Input.GetAxis ("Horizontal");
-		InputZ = Input.GetAxis ("Vertical");
-
-		//Calculate the Input Magnitude
-		Speed = new Vector2(InputX, InputZ).sqrMagnitude + 5;
-
-		//Change animation mode if rotation is blocked
-		//anim.SetBool("shooting", blockRotationPlayer);
-
-		//Physically move player
-		// if (Speed > allowPlayerRotation) {
-		// 	anim.SetFloat ("Blend", Speed, StartAnimTime, Time.deltaTime);
-		// 	anim.SetFloat("X", InputX, StartAnimTime/3, Time.deltaTime);
-		// 	anim.SetFloat("Y", InputZ, StartAnimTime/3, Time.deltaTime);
-		// 	PlayerMoveAndRotation ();
-		// } else if (Speed < allowPlayerRotation) {
-		// 	anim.SetFloat ("Blend", Speed, StopAnimTime, Time.deltaTime);
-		// 	anim.SetFloat("X", InputX, StopAnimTime/ 3, Time.deltaTime);
-		// 	anim.SetFloat("Y", InputZ, StopAnimTime/ 3, Time.deltaTime);
-		// }
 	}
 }
