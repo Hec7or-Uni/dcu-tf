@@ -91,6 +91,18 @@ namespace SlimUI.ModernMenu{
 			mainMenu.SetActive(true);
 
 			SetThemeColors();
+
+			DontDestroyOnLoad(manager);
+		}
+
+		void Update() {
+			if (Mirror.NetworkClient.isConnected && !Mirror.NetworkClient.ready) {
+				Mirror.NetworkClient.Ready();
+				if (Mirror.NetworkClient.localPlayer == null)
+				{
+					Mirror.NetworkClient.AddPlayer();
+				}
+			}
 		}
 
 		[SerializeField]
@@ -98,12 +110,13 @@ namespace SlimUI.ModernMenu{
 		public void startCoop() {
 			PlayerPrefs.SetInt("Coop", 1);
 
-			manager.StartHost();
-			/*Mirror.NetworkClient.Ready();
-			if (Mirror.NetworkClient.localPlayer == null)
-			{
-				Mirror.NetworkClient.AddPlayer();
-			}*/
+			if (Mirror.NetworkServer.active) {
+				manager.StartClient();
+			} else {
+				// manager.StartHost();
+				manager.StartHost();
+				Mirror.NetworkServer.Listen(10);
+			}
 		}
 
 		void SetThemeColors()
@@ -288,7 +301,7 @@ namespace SlimUI.ModernMenu{
 				loadingBar.value = progress;
 
 				if (operation.progress >= 0.9f && waitForInput){
-					loadPromptText.text = "Press " + userPromptKey.ToString().ToUpper() + " to continue";
+					loadPromptText.text = "Press " + /*userPromptKey.ToString().ToUpper()*/ "ENTER" + " to continue";
 					loadingBar.value = 1;
 
 					if (Input.GetKeyDown(userPromptKey)){
